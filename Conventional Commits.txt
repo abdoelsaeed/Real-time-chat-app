@@ -1,0 +1,11 @@
+Conventional Commits الصح:
+
+feat: لما تضيف feature
+
+fix: لما تصلح bug
+
+refactor: لما تنظف كود
+
+chore: إعدادات / setup
+
+docs: لو عدلت README

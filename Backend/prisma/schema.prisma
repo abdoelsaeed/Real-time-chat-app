@@ -1,0 +1,141 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/* =========================
+   USERS
+========================= */
+model User {
+  id           String         @id @default(uuid())
+  email        String         @unique
+  password     String
+  name         String?
+  createdAt    DateTime       @default(now())
+  deletedAt    DateTime?
+
+  participants Participant[]
+  messages     Message[]
+  reactions    Reaction[]
+  messageStatus MessageStatus[]
+
+  @@index([email])
+}
+
+/* =========================
+   CONVERSATIONS
+========================= */
+model Conversation {
+  id           String        @id @default(uuid())
+  isGroup      Boolean       @default(false)
+  name         String?
+  createdAt    DateTime      @default(now())
+  deletedAt    DateTime?
+
+  participants Participant[]
+  messages     Message[]
+
+  @@index([createdAt])
+}
+
+/* =========================
+   PARTICIPANTS
+========================= */
+model Participant {
+  id             String   @id @default(uuid())
+  userId         String
+  conversationId String
+  joinedAt       DateTime @default(now())
+  role           String   @default("member")
+  isMuted        Boolean  @default(false)
+
+  user         User         @relation(fields: [userId], references: [id])
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+
+  @@unique([userId, conversationId])
+  @@index([userId])
+  @@index([conversationId])
+}
+
+/* =========================
+   MESSAGES
+========================= */
+model Message {
+  id             String   @id @default(uuid())
+  content        String?
+  fileUrl        String?
+  fileType       String?
+
+  senderId       String
+  conversationId String
+  parentId       String?
+
+  isEdited       Boolean   @default(false)
+  editedAt       DateTime?
+  isPinned       Boolean   @default(false)
+
+  createdAt      DateTime  @default(now())
+  deletedAt      DateTime?
+
+  sender         User         @relation(fields: [senderId], references: [id])
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+  parent         Message?     @relation("MessageReplies", fields: [parentId], references: [id])
+  replies        Message[]    @relation("MessageReplies")
+
+  reactions      Reaction[]
+  messageStatus  MessageStatus[]
+
+  @@index([conversationId])
+  @@index([createdAt])
+  @@index([parentId])
+  @@index([senderId])
+  @@index([isPinned])
+}
+
+/* =========================
+   REACTIONS
+========================= */
+model Reaction {
+  id        String   @id @default(uuid())
+  type      String
+  userId    String
+  messageId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  message Message @relation(fields: [messageId], references: [id])
+
+  @@unique([userId, messageId, type])
+  @@index([messageId])
+  @@index([userId])
+}
+
+/* =========================
+   MESSAGE STATUS
+========================= */
+model MessageStatus {
+  id         String   @id @default(uuid())
+  messageId  String
+  userId     String
+  deliveredAt DateTime?
+  seenAt      DateTime?
+  updatedAt   DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([messageId, userId])
+  @@index([messageId])
+  @@index([userId])
+}
