@@ -16,7 +16,7 @@ import { AccessTokenGuard } from './guards/access-token.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
+  @Post('signup')
   async create(@Body() createAuthDto: CreateAuthDto, @Res({ passthrough: true }) res: any,
 ) {
     const result = await this.authService.register(createAuthDto);
@@ -69,6 +69,7 @@ export class AuthController {
       sameSite:
         process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       path: '/auth/refresh',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return { accessToken: tokens.accessToken };

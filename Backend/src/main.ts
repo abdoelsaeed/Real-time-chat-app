@@ -15,6 +15,10 @@ async function bootstrap() {
       forbidNonWhitelisted: true, // منع الحقول غير المعرفة
     }),
   );  
-  await app.listen(process.env.PORT ?? 3000);
+  app.enableCors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+  })
+  await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();
