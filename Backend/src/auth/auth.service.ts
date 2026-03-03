@@ -110,9 +110,10 @@ export class AuthService {
     });
     if(!user){
       throw new NotFoundException('you are not logIn')
-    }
+    } 
+    const { refreshToken, password, ...FinalUser } = user
 
-    return user;
+    return FinalUser;
   }
 
   update(id: number, updateAuthDto: UpdateAuthDto) {
