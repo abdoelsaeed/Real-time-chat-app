@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from 'prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { ConversationsModule } from './conversations/conversations.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { JwtModule } from '@nestjs/jwt';
     signOptions: { expiresIn: '60s' },
   }),
   PrismaModule,
-    AuthModule],
+    AuthModule,
+    ConversationsModule],
   controllers: [],
   providers: [],
 })

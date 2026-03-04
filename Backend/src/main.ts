@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
+import * as morgan from 'morgan';
 
 async function bootstrap() {
   
@@ -19,6 +20,8 @@ async function bootstrap() {
     origin: process.env.FRONTEND_URL,
     credentials: true
   })
+  app.use(morgan('dev'));
+
   await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();

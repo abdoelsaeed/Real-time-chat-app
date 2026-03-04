@@ -1,18 +1,9 @@
-import { serverFetch } from "@/lib/server/fetchWithAuth";
+import { getCurrentUser } from "@/lib/services/auth.service";
 
 export default async function Home() {
-  const res = await serverFetch(`${process.env.BACKEND_URL}/auth/me`, {
-    method: "GET",
-    cache: "no-store",
-  });
 
-  if (!res.ok) {
-    // مش مسجل دخول (أو refresh فشل)
-    return <div className="min-h-screen flex items-center justify-center">Guest</div>;
-  }
 
-  const user = await res.json();
-console.log(user);
+  const user = await getCurrentUser()
   return (
     <div className="min-h-screen flex items-center justify-center">
       {user?.name}
