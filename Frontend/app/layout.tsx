@@ -2,7 +2,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Metadata } from "next";
 import { ThemeProvider } from "@/app/_components/Theme-provider"
-import { ModeToggle } from "./_components/ThemeToggle";
 
 
 export const metadata: Metadata = {
@@ -25,12 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
-          <div className="fixed top-4 right-4 z-50">
-            <ModeToggle />
-          </div>
-          <main className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            {children}
-          </main>
+          {children}
         </ThemeProvider>
       </body>
     </html>

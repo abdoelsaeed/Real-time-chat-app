@@ -60,10 +60,10 @@ export function AuthCard({
             return;
         }
         const result: { success: string } = await res.json();
-        console.log(result);
+        
 
         if (result.success){
-            router.push("/")
+            router.push("/chat")
         }
     }
 
