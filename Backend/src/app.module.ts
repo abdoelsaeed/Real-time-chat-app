@@ -5,18 +5,20 @@ import { PrismaModule } from 'prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { ConversationsModule } from './conversations/conversations.module';
+import { StoriesModule } from './stories/stories.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(), 
+    ConfigModule.forRoot(),
     JwtModule.register({
-    global: true,
-    secret: process.env.JWT_SECRET,
-    signOptions: { expiresIn: '60s' },
-  }),
-  PrismaModule,
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '60s' },
+    }),
+    PrismaModule,
     AuthModule,
-    ConversationsModule],
+    ConversationsModule,
+    StoriesModule],
   controllers: [],
   providers: [],
 })

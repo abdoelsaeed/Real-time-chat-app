@@ -28,8 +28,10 @@ model User {
   messages     Message[]
   reactions    Reaction[]
   messageStatus MessageStatus[]
+  stories Storie[]
 
   @@index([email])
+  storyViews StoryView[]
 }
 
 /* =========================
@@ -138,4 +140,32 @@ model MessageStatus {
   @@unique([messageId, userId])
   @@index([messageId])
   @@index([userId])
+}
+
+model Storie {
+  id String @id @default(uuid())
+  authorId String
+  media_url String?
+  media_type String?
+  caption String? 
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  deletedAt DateTime?
+  @@index([authorId])
+  @@index([expiresAt])
+  author User @relation(fields: [authorId],references: [id])
+  storyViews StoryView[]
+}
+model StoryView {
+  id String @id @default(uuid())
+  storyId String
+  viewerId String
+  viewedAt DateTime @default(now())
+
+  story Storie @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  viewer    User  @relation(fields: [viewerId], references: [id])
+
+  @@unique([storyId, viewerId])
+  @@index([storyId])
+  @@index([viewerId])
 }
